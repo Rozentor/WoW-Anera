@@ -2,7 +2,7 @@ using Photon.Pun;
 using UnityEngine;
 
 
-public class CameraFollow : MonoBehaviourPun
+public class CameraFollow : MonoBehaviour
 {
     #region Private Fields
 
@@ -39,21 +39,6 @@ public class CameraFollow : MonoBehaviourPun
     #endregion
 
     #region MonoBehaviour Callbacks
-
-    /// <summary>
-    /// MonoBehaviour method called on GameObject by Unity during initialization phase
-    /// </summary>
-    void Start()
-    {
-        // Start following the target if wanted.
-        
-            if (followOnStart)
-            {
-                OnStartFollowing();
-            }
-        
-    }
-
 
     void LateUpdate()
     {

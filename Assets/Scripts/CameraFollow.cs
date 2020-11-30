@@ -1,7 +1,8 @@
+using Photon.Pun;
 using UnityEngine;
 
 
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : MonoBehaviourPun
 {
     #region Private Fields
 
@@ -45,10 +46,12 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         // Start following the target if wanted.
-        if (followOnStart)
-        {
-            OnStartFollowing();
-        }
+        
+            if (followOnStart)
+            {
+                OnStartFollowing();
+            }
+        
     }
 
 
@@ -96,9 +99,9 @@ public class CameraFollow : MonoBehaviour
         cameraOffset.z = -distance;
         cameraOffset.y = height;
 
-        cameraTransform.position = Vector3.Lerp(cameraTransform.position, this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
+        cameraTransform.position = Vector3.Lerp(cameraTransform.position, transform.position + transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
 
-        cameraTransform.LookAt(this.transform.position + centerOffset);
+        cameraTransform.LookAt(transform.position + centerOffset);
 
     }
 
@@ -108,9 +111,9 @@ public class CameraFollow : MonoBehaviour
         cameraOffset.z = -distance;
         cameraOffset.y = height;
 
-        cameraTransform.position = this.transform.position + this.transform.TransformVector(cameraOffset);
+        cameraTransform.position = transform.position + transform.TransformVector(cameraOffset);
 
-        cameraTransform.LookAt(this.transform.position + centerOffset);
+        cameraTransform.LookAt(transform.position + centerOffset);
     }
     #endregion
 }

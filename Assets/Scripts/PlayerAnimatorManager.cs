@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
 
-public class PlayerAnimatorManager : MonoBehaviour
+public class PlayerAnimatorManager : MonoBehaviourPun
 {
     private Animator animator;
 
@@ -20,6 +21,11 @@ public class PlayerAnimatorManager : MonoBehaviour
 
     void Update()
     {
+        if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+        {
+            return;
+        }
+
         if (!animator)
         {
             return;

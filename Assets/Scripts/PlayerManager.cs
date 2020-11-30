@@ -32,6 +32,11 @@ public class PlayerManager : MonoBehaviourPun
 
     void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit))

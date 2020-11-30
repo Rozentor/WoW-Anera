@@ -24,7 +24,6 @@ public class LobbyLauncher : MonoBehaviourPunCallbacks
     private GameObject progressLabel;
     #endregion
 
-
     #region Private Fields
 
     /// <summary>
@@ -42,9 +41,7 @@ public class LobbyLauncher : MonoBehaviourPunCallbacks
 
     #endregion
 
-
     #region MonoBehaviour CallBacks
-
 
     /// <summary>
     /// MonoBehaviour method called on GameObject by Unity during early initialization phase.
@@ -69,9 +66,7 @@ public class LobbyLauncher : MonoBehaviourPunCallbacks
 
     #endregion
 
-
     #region Public Methods
-
 
     /// <summary>
     /// Start the connection process.
@@ -94,12 +89,9 @@ public class LobbyLauncher : MonoBehaviourPunCallbacks
         }
     }
 
-
     #endregion
 
-
     #region MonoBehaviourPunCallbacks Callbacks
-
 
     public override void OnConnectedToMaster()
     {
@@ -111,7 +103,6 @@ public class LobbyLauncher : MonoBehaviourPunCallbacks
             isConnecting = false;
         }
     }
-
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -140,7 +131,6 @@ public class LobbyLauncher : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel(1);
         }
     }
-
 
     #endregion
 }

@@ -78,15 +78,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient)
         {
-            Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
+            Debug.LogError("PhotonNetwork: Trying to Load a level but we are not the master Client");
         }
-        Debug.LogFormat("PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.LogFormat("PhotonNetwork: Loading Arena");
         PhotonNetwork.LoadLevel(1);
     }
 
 
     #endregion
-
+    
     void Start()
     {
         Instance = this;
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
+            Debug.LogFormat("We are Instantiating LocalPlayer");
             // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
             PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity);
         }

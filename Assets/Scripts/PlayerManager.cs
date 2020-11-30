@@ -46,11 +46,8 @@ public class PlayerManager : MonoBehaviourPun
             }
         }
 
-
-
-
-        animator.SetFloat("Speed", agent.hasPath ? 10 : 0);
-
+        var direction = agent.destination - agent.nextPosition;
+        animator.SetFloat("Speed", direction.normalized.magnitude);
         //animator.SetFloat("Direction", pos.magnitude, 0.25f, Time.deltaTime); TODO
     }
 

@@ -15,14 +15,15 @@ public class PlayerManager : MonoBehaviourPun
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        agent.updatePosition = false;
+        if (!photonView.IsMine)
+        {
+            agent.enabled = false;
+            return;
+        }
 
         if (camera != null)
         {
-            if (photonView.IsMine)
-            {
-                camera.OnStartFollowing();
-            }
+            camera.OnStartFollowing();
         }
         else
         {
@@ -45,25 +46,21 @@ public class PlayerManager : MonoBehaviourPun
             }
         }
 
-        var worldDeltaPosition = agent.nextPosition - transform.position;
-
-        var dx = Vector3.Dot(transform.right, worldDeltaPosition);
-        var dy = Vector3.Dot(transform.forward, worldDeltaPosition);
-        var deltaPosition = new Vector2(dx, dy);
-
-        var smooth = Mathf.Min(1.0f, Time.deltaTime / 0.15f);
-        smoothDeltaPosition = Vector2.Lerp(smoothDeltaPosition, deltaPosition, smooth);
-
-        if (Time.deltaTime > 1e-5f)
-            velocity = smoothDeltaPosition / Time.deltaTime;
 
 
-        animator.SetFloat("Speed", velocity.x + velocity.y);
+
+        animator.SetFloat("Speed", agent.hasPath ? 10 : 0);
+
         //animator.SetFloat("Direction", pos.magnitude, 0.25f, Time.deltaTime); TODO
     }
 
     void OnAnimatorMove()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         transform.position = agent.nextPosition;
     }
 }

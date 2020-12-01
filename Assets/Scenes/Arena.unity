@@ -499,6 +499,8 @@ MonoBehaviour:
   centerOffset: {x: 0, y: 0, z: 0}
   smoothSpeed: 10
   Boundary: 50
+  maxScrollDistance: 15
+  minScrollDistance: 1
 --- !u!4 &1393449966
 Transform:
   m_ObjectHideFlags: 0

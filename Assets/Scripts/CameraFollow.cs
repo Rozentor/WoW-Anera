@@ -110,7 +110,7 @@ public class CameraFollow : MonoBehaviour
 
         if (moveDirection != Vector3.zero)
         {
-           // Move(moveDirection);
+            Move(moveDirection);
         }
     }
 

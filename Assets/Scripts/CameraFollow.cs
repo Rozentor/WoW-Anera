@@ -43,6 +43,12 @@ public class CameraFollow : MonoBehaviour
     private bool isFollowingByMouse;
     private Vector3 lastMousePosition;
 
+    [SerializeField]
+    private float maxScrollDistance = 15;
+
+    [SerializeField]
+    private float minScrollDistance = 1;
+
 
     #endregion
 
@@ -72,6 +78,11 @@ public class CameraFollow : MonoBehaviour
 
     void Update()
     {
+        var mouseScrollDelta = Input.GetAxis("Mouse ScrollWheel");
+        height -= mouseScrollDelta;
+        height = Mathf.Max(height, minScrollDistance);
+        height = Mathf.Min(height, maxScrollDistance);
+
         if (Input.GetMouseButtonUp(2))
         {
             isFollowingByMouse = false;
@@ -99,7 +110,7 @@ public class CameraFollow : MonoBehaviour
 
         if (moveDirection != Vector3.zero)
         {
-            Move(moveDirection);
+           // Move(moveDirection);
         }
     }
 

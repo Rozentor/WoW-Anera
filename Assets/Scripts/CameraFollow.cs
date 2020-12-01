@@ -5,6 +5,10 @@ public class CameraFollow : MonoBehaviour
 {
     #region Private Fields
 
+    [Tooltip("The move speed ")]
+    [SerializeField]
+    private float moveSpeed = 10f;
+
     [Tooltip("The distance in the local x-z plane to the target")]
     [SerializeField]
     private float distance = 7.0f;
@@ -17,13 +21,11 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private Vector3 centerOffset = Vector3.zero;
 
-    [Tooltip("Set this as false if a component of a prefab being instanciated by Photon Network, and manually call OnStartFollowing() when and if needed.")]
-    [SerializeField]
-    private bool followOnStart = false;
-
     [Tooltip("The Smoothing for the camera to follow the target")]
     [SerializeField]
     private float smoothSpeed = 0.125f;
+
+    private bool smoothEnabled = true;
 
     // cached transform of the target
     Transform cameraTransform;
@@ -34,6 +36,13 @@ public class CameraFollow : MonoBehaviour
     // Cache for camera offset
     Vector3 cameraOffset = Vector3.zero;
 
+    public int Boundary = 50;
+    private int screenWidth;
+    private int screenHeight;
+
+    private bool isFollowingByMouse;
+    private Vector3 lastMousePosition;
+
 
     #endregion
 
@@ -43,7 +52,7 @@ public class CameraFollow : MonoBehaviour
     {
         // The transform target may not destroy on level load, 
         // so we need to cover corner cases where the Main Camera is different everytime we load a new scene, and reconnect when that happens
-        if (cameraTransform == null && isFollowing)
+        if (cameraTransform == null && !isFollowing)
         {
             OnStartFollowing();
         }
@@ -55,9 +64,108 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        screenWidth = Screen.width;
+        screenHeight = Screen.height;
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonUp(2))
+        {
+            isFollowingByMouse = false;
+            smoothEnabled = true;
+        }
+        else if (Input.GetMouseButtonDown(2))
+        {
+            var mousePos = Input.mousePosition;
+            lastMousePosition = mousePos;
+            isFollowingByMouse = true;
+            smoothEnabled = false;
+        }
+
+        if (isFollowingByMouse)
+        {
+            var mousePos = Input.mousePosition;
+            var delta = mousePos - lastMousePosition;
+            var move = new Vector3(-delta.x, 0, -delta.y);
+            Move(move);
+            lastMousePosition = mousePos;
+            return;
+        }
+
+        var moveDirection = GetMouseMoveDirection() + GetInputMoveDirection();
+
+        if (moveDirection != Vector3.zero)
+        {
+            Move(moveDirection);
+        }
+    }
+
     #endregion
 
-    #region Public Methods
+    #region Private Methods
+
+    Vector3 GetMouseMoveDirection()
+    {
+        var moveDirection = Vector3.zero;
+
+        if (Input.mousePosition.y > screenHeight - Boundary)
+        {
+            moveDirection += Vector3.forward;
+        }
+
+        if (Input.mousePosition.y < 0 + Boundary)
+        {
+            moveDirection += Vector3.back;
+        }
+
+        if (Input.mousePosition.x < 0 + Boundary)
+        {
+            moveDirection += Vector3.left;
+        }
+
+        if (Input.mousePosition.x > screenWidth - Boundary)
+        {
+            moveDirection += Vector3.right;
+        }
+
+        return moveDirection;
+    }
+
+    Vector3 GetInputMoveDirection()
+    {
+        var moveDirection = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            moveDirection = Vector3.forward;
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            moveDirection = Vector3.back;
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            moveDirection = Vector3.left;
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            moveDirection = Vector3.right;
+        }
+
+        return moveDirection;
+    }
+
+    void Move(Vector3 moveDirection)
+    {
+        transform.position = Vector3.Lerp(
+            transform.position,
+            transform.position + moveDirection * moveSpeed * Time.deltaTime,
+            0.75f
+        );
+    }
 
     /// <summary>
     /// Raises the start following event. 
@@ -71,10 +179,6 @@ public class CameraFollow : MonoBehaviour
         Cut();
     }
 
-    #endregion
-
-    #region Private Methods
-
     /// <summary>
     /// Follow the target smoothly
     /// </summary>
@@ -83,10 +187,13 @@ public class CameraFollow : MonoBehaviour
         cameraOffset.z = -distance;
         cameraOffset.y = height;
 
-        cameraTransform.position = Vector3.Lerp(cameraTransform.position, transform.position + transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
+        var newPosition = smoothEnabled
+            ? Vector3.Lerp(cameraTransform.position, transform.position + transform.TransformVector(cameraOffset),
+                smoothSpeed * Time.deltaTime)
+            : transform.position + transform.TransformVector(cameraOffset);
+        cameraTransform.position = newPosition;
 
         cameraTransform.LookAt(transform.position + centerOffset);
-
     }
 
 

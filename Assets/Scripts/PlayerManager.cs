@@ -11,23 +11,12 @@ public class PlayerManager : MonoBehaviourPun
 
     void Start()
     {
-        var camera = GetComponent<CameraFollow>();
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
         if (!photonView.IsMine)
         {
             agent.enabled = false;
-            return;
-        }
-
-        if (camera != null)
-        {
-            camera.OnStartFollowing();
-        }
-        else
-        {
-            Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
         }
     }
 
